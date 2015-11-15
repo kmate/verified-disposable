@@ -5,7 +5,7 @@ import java.io.InputStream;
 
 import org.objectweb.asm.ClassReader;
 
-public class ClassUtils {
+public abstract class ClassUtils {
 
 	public static final String DISPOSABLE_CLASS_NAME = Disposable.class.getName().replace('.', '/');
 

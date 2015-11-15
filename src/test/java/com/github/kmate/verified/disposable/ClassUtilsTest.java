@@ -8,7 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class ClassUtilsTest {
+public class ClassUtilsTest extends ClassUtils {
 
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
@@ -17,12 +17,12 @@ public class ClassUtilsTest {
 
 	@Test
 	public void testObjectIsSystemClass() {
-		assertTrue(ClassUtils.isSystemClass("java/lang/Object"));
+		assertTrue(isSystemClass("java/lang/Object"));
 	}
 
 	@Test
 	public void testNamingContextIsSystemClass() {
-		assertTrue(ClassUtils.isSystemClass("javax/naming/Context"));
+		assertTrue(isSystemClass("javax/naming/Context"));
 	}
 
 	@Test
@@ -30,17 +30,17 @@ public class ClassUtilsTest {
 		final String invalidClassName = "an invalid class name";
 		thrown.expect(IllegalArgumentException.class);
 		thrown.expectMessage(containsString(invalidClassName));
-		ClassUtils.isDisposableClass(invalidClassName, loader);
+		isDisposableClass(invalidClassName, loader);
 	}
 
 	@Test
 	public void testObjectIsNotDisposable() {
-		assertFalse(ClassUtils.isDisposableClass(Object.class.getName(), loader));
+		assertFalse(isDisposableClass(Object.class.getName(), loader));
 	}
 
 	@Test
 	public void testNonDisposable() {
-		assertFalse(ClassUtils.isDisposableClass(NonDisposable.class.getName(), loader));
+		assertFalse(isDisposableClass(NonDisposable.class.getName(), loader));
 	}
 
 	private static class NonDisposable {
@@ -48,7 +48,7 @@ public class ClassUtilsTest {
 
 	@Test
 	public void testDirectImplementationOfDisposable() {
-		assertTrue(ClassUtils.isDisposableClass(DirectImplementor.class.getName(), loader));
+		assertTrue(isDisposableClass(DirectImplementor.class.getName(), loader));
 	}
 
 	private static class DirectImplementor implements Disposable {
@@ -61,7 +61,7 @@ public class ClassUtilsTest {
 
 	@Test
 	public void testInheritedClassImplementationOfDisposable() {
-		assertTrue(ClassUtils.isDisposableClass(InheritedClassImplementor.class.getName(), loader));
+		assertTrue(isDisposableClass(InheritedClassImplementor.class.getName(), loader));
 	}
 
 	private static class InheritedClassImplementor extends DirectImplementor {
@@ -69,7 +69,7 @@ public class ClassUtilsTest {
 
 	@Test
 	public void testInheritedInterfaceImplementationOfDisposable() {
-		assertTrue(ClassUtils.isDisposableClass(InheritedInterfaceImplementor.class.getName(), loader));
+		assertTrue(isDisposableClass(InheritedInterfaceImplementor.class.getName(), loader));
 	}
 
 	private static interface InheritedDisposable extends Disposable {

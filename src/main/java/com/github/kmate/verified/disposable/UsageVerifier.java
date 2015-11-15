@@ -1,6 +1,6 @@
 package com.github.kmate.verified.disposable;
 
-public class UsageVerifier {
+public abstract class UsageVerifier {
 
 	public static void verifyFieldRead(Disposable target, String fieldName) {
 		if (target.isDisposed()) {

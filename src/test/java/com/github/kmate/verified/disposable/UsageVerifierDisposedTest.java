@@ -11,7 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class UsageVerifierDisposedTest {
+public class UsageVerifierDisposedTest extends UsageVerifier {
 
 	private static final String TEST_FIELD_NAME = "testField";
 	private static final String TEST_METHOD_NAME = "testMethod";
@@ -40,7 +40,7 @@ public class UsageVerifierDisposedTest {
 		thrown.expect(hasTarget(target));
 		thrown.expect(hasFieldName(TEST_FIELD_NAME));
 		thrown.expect(isRead());
-		UsageVerifier.verifyFieldRead(target, TEST_FIELD_NAME);
+		verifyFieldRead(target, TEST_FIELD_NAME);
 	}
 
 	@Test
@@ -49,7 +49,7 @@ public class UsageVerifierDisposedTest {
 		thrown.expect(hasTarget(target));
 		thrown.expect(hasFieldName(TEST_FIELD_NAME));
 		thrown.expect(isWrite());
-		UsageVerifier.verifyFieldWrite(target, TEST_FIELD_NAME);
+		verifyFieldWrite(target, TEST_FIELD_NAME);
 	}
 
 	@Test
@@ -57,6 +57,6 @@ public class UsageVerifierDisposedTest {
 		thrown.expect(MethodInvocationException.class);
 		thrown.expect(hasTarget(target));
 		thrown.expect(hasMethodName(TEST_METHOD_NAME));
-		UsageVerifier.verifyMethodInvocation(target, TEST_METHOD_NAME);
+		verifyMethodInvocation(target, TEST_METHOD_NAME);
 	}
 }

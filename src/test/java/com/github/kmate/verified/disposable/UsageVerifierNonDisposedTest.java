@@ -3,7 +3,7 @@ package com.github.kmate.verified.disposable;
 import org.junit.Before;
 import org.junit.Test;
 
-public class UsageVerifierNonDisposedTest {
+public class UsageVerifierNonDisposedTest extends UsageVerifier {
 
 	private NeverDisposed target;
 
@@ -22,16 +22,16 @@ public class UsageVerifierNonDisposedTest {
 
 	@Test
 	public void testReadingField() {
-		UsageVerifier.verifyFieldRead(target, "testField");
+		verifyFieldRead(target, "testField");
 	}
 
 	@Test
 	public void testWritingField() {
-		UsageVerifier.verifyFieldWrite(target, "testField");
+		verifyFieldWrite(target, "testField");
 	}
 
 	@Test
 	public void testInvokingMethod() {
-		UsageVerifier.verifyMethodInvocation(target, "testMethod");
+		verifyMethodInvocation(target, "testMethod");
 	}
 }
