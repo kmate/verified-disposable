@@ -34,11 +34,6 @@ public class ClassUtils {
 			}
 		}
 
-		String superName = reader.getSuperName();
-		if (null != superName) {
-			return isDisposableClass(superName, loader);
-		}
-
-		return false;
+		return isDisposableClass(reader.getSuperName(), loader);
 	}
 }
