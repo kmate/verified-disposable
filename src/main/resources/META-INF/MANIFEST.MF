@@ -1,0 +1,2 @@
+Premain-Class: com.github.kmate.verified.disposable.Agent
+Agent-Class: com.github.kmate.verified.disposable.Agent
