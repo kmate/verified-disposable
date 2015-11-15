@@ -56,17 +56,13 @@ final class UsageVerifierInstructionAdapter extends InstructionAdapter {
 
 	@Override
 	public void invokevirtual(String owner, String name, String desc, boolean itf) {
-		if (isDisposableClass(owner)) {
-			insertMethodVerifier(owner, name, desc);
-		}
+		insertMethodVerifierWhenDisposable(owner, name, desc);
 		super.invokevirtual(owner, name, desc, itf);
 	}
 
 	@Override
 	public void invokeinterface(String owner, String name, String desc) {
-		if (isDisposableClass(owner)) {
-			insertMethodVerifier(owner, name, desc);
-		}
+		insertMethodVerifierWhenDisposable(owner, name, desc);
 		super.invokeinterface(owner, name, desc);
 	}
 
@@ -80,11 +76,7 @@ final class UsageVerifierInstructionAdapter extends InstructionAdapter {
 
 	@Override
 	public void invokedynamic(String name, String desc, Handle bsm, Object[] bsmArgs) {
-		// FIXME: owner needs more investigation
-		if (isDisposableClass(bsm.getOwner())) {
-			// TODO: implement
-			throw new UnsupportedOperationException("invokedynamic: " + bsm.getOwner() + "::" + name);
-		}
+		insertMethodVerifierWhenDisposable(bsm.getOwner(), name, desc);
 		super.invokedynamic(name, desc, bsm, bsmArgs);
 	}
 
@@ -95,6 +87,12 @@ final class UsageVerifierInstructionAdapter extends InstructionAdapter {
 			return false;
 		}
 		return ClassUtils.isDisposableClass(candidate, loader);
+	}
+
+	private void insertMethodVerifierWhenDisposable(String owner, String name, String desc) {
+		if (isDisposableClass(owner)) {
+			insertMethodVerifier(owner, name, desc);
+		}
 	}
 
 	private void insertMethodVerifier(String owner, String name, String desc) {
