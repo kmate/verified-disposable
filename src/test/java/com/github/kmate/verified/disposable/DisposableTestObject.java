@@ -1,8 +1,6 @@
-package com.github.kmate.verified.disposable.test;
+package com.github.kmate.verified.disposable;
 
-import com.github.kmate.verified.disposable.Disposable;
-
-public class ModelClass implements Disposable {
+public class DisposableTestObject implements Disposable {
 
 	private boolean disposed = false;
 
@@ -13,5 +11,10 @@ public class ModelClass implements Disposable {
 
 	public void dispose() {
 		disposed = true;
+	}
+
+	public int testField;
+
+	public void testMethod(int testParam) {
 	}
 }
