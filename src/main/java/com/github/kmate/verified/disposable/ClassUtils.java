@@ -19,7 +19,7 @@ public class ClassUtils {
 			ClassReader reader = new ClassReader(classStream);
 			return isDisposableClass(reader, loader);
 		} catch (IOException e) {
-			return false;
+			throw new IllegalArgumentException("Unable to load class data: " + className);
 		}
 	}
 
