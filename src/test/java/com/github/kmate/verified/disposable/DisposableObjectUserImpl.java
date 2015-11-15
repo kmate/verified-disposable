@@ -22,7 +22,13 @@ public class DisposableObjectUserImpl implements DisposableObjectUser {
 	}
 
 	@Override
-	public void invokeMethod() {
+	public void invokeVirtualMethod() {
 		target.testMethod(0);
+	}
+
+	@Override
+	public void invokeInterfaceMethod() {
+		TestMethod interfaceTarget = target;
+		interfaceTarget.testMethod(0);
 	}
 }

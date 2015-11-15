@@ -62,6 +62,8 @@ final class UsageVerifierInstructionAdapter extends InstructionAdapter {
 
 	@Override
 	public void invokeinterface(String owner, String name, String desc) {
+		// FIXME: this is not good. Are we really unable to tell whether the
+		// check will be needed on this call?
 		insertMethodVerifierWhenDisposable(owner, name, desc);
 		super.invokeinterface(owner, name, desc);
 	}

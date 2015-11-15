@@ -41,7 +41,9 @@ public class UsageVerifierTest {
 
 	@Test
 	public void testInvokingMethod() {
-		user.invokeMethod();
+		user.invokeVirtualMethod();
+		user.invokeInterfaceMethod();
+		user.invokeVirtualMethod();
 	}
 
 	@Test
@@ -63,10 +65,20 @@ public class UsageVerifierTest {
 	}
 
 	@Test
-	public void testInvokingMethodThrowsException() {
+	public void testInvokingVirtualMethodThrowsException() {
+		expectMethodInvocationException();
+		user.invokeVirtualMethod();
+	}
+
+	@Test
+	public void testInvokingInterfaceMethodThrowsException() {
+		expectMethodInvocationException();
+		user.invokeInterfaceMethod();
+	}
+
+	private void expectMethodInvocationException() {
 		thrown.expect(MethodInvocationException.class);
 		thrown.expect(hasTarget(user.disposeAndGetTarget()));
 		thrown.expect(hasMethodName("testMethod"));
-		user.invokeMethod();
 	}
 }

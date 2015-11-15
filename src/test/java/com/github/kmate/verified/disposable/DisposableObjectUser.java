@@ -8,5 +8,7 @@ public interface DisposableObjectUser {
 
 	void writeField();
 
-	void invokeMethod();
+	void invokeVirtualMethod();
+
+	void invokeInterfaceMethod();
 }
