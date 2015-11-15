@@ -101,7 +101,7 @@ final class UsageVerifierInstructionAdapter extends InstructionAdapter {
 		Method method = new Method(name, desc);
 		Type[] argTypes = method.getArgumentTypes();
 		int numArgs = argTypes.length;
-		Stack<Integer> argLocals = new Stack<>();
+		Stack<Integer> argLocals = new Stack<Integer>();
 		for (int i = numArgs - 1; i >= 0; --i) {
 			Type argType = argTypes[i];
 			int argLocal = variables.newLocal(argType);
