@@ -1,4 +1,4 @@
-package net.kmate.verified.disposable;
+package com.github.kmate.verified.disposable;
 
 import java.io.IOException;
 import java.io.InputStream;

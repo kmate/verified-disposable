@@ -1,6 +1,6 @@
-package net.kmate.verified.disposable.test;
+package com.github.kmate.verified.disposable.test;
 
-import net.kmate.verified.disposable.Disposable;
+import com.github.kmate.verified.disposable.Disposable;
 
 public class ModelClass implements Disposable {
 

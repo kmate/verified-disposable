@@ -1,8 +1,9 @@
-package net.kmate.verified.disposable;
+package com.github.kmate.verified.disposable;
 
 import java.lang.instrument.Instrumentation;
 
-import net.kmate.verified.disposable.test.TestUser;
+import com.github.kmate.verified.disposable.test.TestUser;
+
 import net.nicoulaj.instrument.AutoInstrumentation;
 
 /**

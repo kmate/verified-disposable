@@ -2,13 +2,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>net.kmate</groupId>
+	<groupId>com.github.kmate</groupId>
 	<artifactId>verified-disposable</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>verified-disposable</name>
-	<description>Disposable objects in Java with run-time usage verification </description>
+	<name>${project.groupId}:${project.artifactId}</name>
+	<description>Disposable objects in Java with run-time usage verification.</description>
 
 	<licenses>
 		<license>
@@ -23,7 +23,7 @@
 		<tag>HEAD</tag>
 	</scm>
 	<issueManagement>
-		<system>Github</system>
+		<system>GitHub</system>
 		<url>http://github.com/kmate/verified-disposable/issues</url>
 	</issueManagement>
 	<ciManagement>
@@ -32,10 +32,17 @@
 	</ciManagement>
 	<distributionManagement>
 		<site>
-			<id>github</id>
+			<id>GitHub</id>
 			<url>gitsite:git@github.com/kmate/verified-disposable.git</url>
 		</site>
 	</distributionManagement>
+	<developers>
+		<developer>
+			<name>Máté Karácsony</name>
+			<email>k_mate@inf.elte.hu</email>
+			<url>http://github.com/kmate</url>
+		</developer>
+	</developers>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

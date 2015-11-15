@@ -1,4 +1,4 @@
-package net.kmate.verified.disposable;
+package com.github.kmate.verified.disposable;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;

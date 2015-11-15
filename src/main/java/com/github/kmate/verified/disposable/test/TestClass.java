@@ -1,4 +1,4 @@
-package net.kmate.verified.disposable.test;
+package com.github.kmate.verified.disposable.test;
 
 public class TestClass extends ModelClass {
 

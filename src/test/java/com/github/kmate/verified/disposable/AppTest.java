@@ -1,4 +1,4 @@
-package net.kmate.verified.disposable;
+package com.github.kmate.verified.disposable;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

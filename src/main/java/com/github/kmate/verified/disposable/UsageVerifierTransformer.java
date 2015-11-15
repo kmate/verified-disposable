@@ -1,4 +1,4 @@
-package net.kmate.verified.disposable;
+package com.github.kmate.verified.disposable;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
