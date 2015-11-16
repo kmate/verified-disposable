@@ -20,6 +20,7 @@ public class UsageVerifierClassVisitor extends ClassVisitor {
 	@Override
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 		MethodVisitor writer = super.visitMethod(access, name, desc, signature, exceptions);
-		return new UsageVerifierInstructionAdapter(reader, new LocalVariablesSorter(access, desc, writer), loader);
+		LocalVariablesSorter variables = new LocalVariablesSorter(access, desc, writer);
+		return new UsageVerifierInstructionAdapter(access, name, reader, loader, variables);
 	}
 }
