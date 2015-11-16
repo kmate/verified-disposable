@@ -16,7 +16,7 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.InstructionAdapter;
 import org.objectweb.asm.commons.LocalVariablesSorter;
 
-final class UsageVerifierInstructionAdapter extends InstructionAdapter {
+class UsageVerifierInstructionAdapter extends InstructionAdapter {
 
 	private static final String USAGE_VERIFIER_CLASS_NAME = UsageVerifier.class.getName().replace('.', '/');
 	private static final String VERIFIER_SIGNATURE = "(L" + ClassUtils.DISPOSABLE_CLASS_NAME + ";Ljava/lang/String;)V";

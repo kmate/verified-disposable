@@ -6,7 +6,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.LocalVariablesSorter;
 
-public class UsageVerifierClassVisitor extends ClassVisitor {
+class UsageVerifierClassVisitor extends ClassVisitor {
 
 	private final ClassReader reader;
 	private final ClassLoader loader;
