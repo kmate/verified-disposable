@@ -8,3 +8,57 @@ This library provides run-time verification of instance field access and method 
 ## Implementation
 
 The implementation is based on [Java Instrumentation](https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html) and on the [ASM](http://asm.ow2.org/) bytecode manipulation framework. When the instrumentation agent implemented by the `Agent` class is active, it registers a class transformer, which will manipulate all classes loaded thereafter. The transformation inserts a static call to the appropriate method of class `UsageVerifier` before each field access of `Disposable` objects, except for those which are done in the same `Disposable` class. Every non-static and non-private regular method of `Disposable` objects will also be extended with a similar check on its entry.
+
+## Usage
+
+### Creating disposable objects
+
+Simply implement the `Disposable` interface. Note that the disposition of an object could be done in any preferred way, and must not be final either.
+
+```java
+import com.github.kmate.verified.disposable.Disposable;
+
+public class TestSubject implements Disposable {
+
+	@Override
+	public boolean isDisposed() {
+		return disposed;
+	}	
+
+	private boolean disposed;
+
+	public void dispose() {
+		disposed = true;
+	}
+
+	public int someField;
+
+	public void someMethod() {
+		System.out.println(someField);
+	}
+}
+```
+
+### Registration of the verifier agent
+
+One could either use the `-javaagent` switch for the JVM, or call `Agent.initialize()`. The second aproach will work as expected only when it is called before any of the `Disposable` classes or their users are loaded. It may also require the `-XX:+StartAttachListener` command line option to be passed for the JVM.
+
+### Using the disposable instances
+
+Instances of `Disposable` classes can be used simply as normal Java objects. The only difference is that method invocation or field access will throw a specific runtime exception when their `isDisposed()` method returns true.
+
+```java
+TestSubject object = new TestSubject();
+
+// regular field and method access
+object.someField = object.someField + 42;
+object.someMethod();
+
+// isDisposed() will return true below this point
+object.dispose();
+
+// each of these lines will throw a specific UsageException
+int valueRead = object.someField;
+object.someField = 0;
+object.someMethod();
+```
