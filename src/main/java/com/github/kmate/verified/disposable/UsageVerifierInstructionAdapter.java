@@ -23,14 +23,16 @@ import org.objectweb.asm.commons.LocalVariablesSorter;
  * non-static and non-private regular method of disposable objects will also be
  * extended with a similar check on its entry.
  * <p>
- * For clarification, the following methods will <b>not</b> be modified on a
- * disposable object:
+ * For the sake of clarity, the following methods will <b>not</b> be modified on
+ * a disposable object:
+ * <ul>
  * <li>constructors
  * <li>class initializer {@code <clinit>} and instance initializer {@code 
  * <init>}
  * <li>{@link #getClass()}
  * <li>{@link Disposable#isDisposed()}
  * <li>any static, private, synthetic and bridge methods
+ * </ul>
  * 
  * @see UsageVerifierTransformer
  */

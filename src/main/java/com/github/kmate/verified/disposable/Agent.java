@@ -16,9 +16,11 @@ import net.nicoulaj.instrument.AutoInstrumentation;
  * <p>
  * It is important to initialize the agent before any client classes of
  * disposable classes are loaded. This could be done in the following two ways:
+ * <ul>
  * <li>A static call to {@link #initialize()}. In this case, the Java program
  * must be started with VM argument {@code -XX:+StartAttachListener}.
  * <li>Using this class as a Java agent with the {@code -javaagent} VM argument.
+ * </ul>
  */
 public class Agent {
 
