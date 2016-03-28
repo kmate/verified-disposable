@@ -1,5 +1,12 @@
 package com.github.kmate.verified.disposable;
 
+/**
+ * Implements verification methods. Each of them just throws a specific
+ * {@link UsageException} when the target object is marked as disposed.
+ * 
+ * @see Disposable#isDisposed()
+ * @see Agent
+ */
 public abstract class UsageVerifier {
 
 	public static void verifyFieldRead(Disposable target, String fieldName) {

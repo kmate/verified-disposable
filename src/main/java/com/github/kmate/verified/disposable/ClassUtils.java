@@ -5,10 +5,26 @@ import java.io.InputStream;
 
 import org.objectweb.asm.ClassReader;
 
+/**
+ * Various utilities for detecting {@link Disposable} and system classes.
+ */
 abstract class ClassUtils {
 
 	public static final String DISPOSABLE_CLASS_NAME = Disposable.class.getName().replace('.', '/');
 
+	/**
+	 * Determines whether a class is a system class. All classes in the
+	 * {@code java.*} and {@code javax.*} packages are treated as system
+	 * classes. These classes will never be transformed by
+	 * {@link UsageVerifierTransformer}.
+	 * 
+	 * @param className
+	 *            the name of the class in the internal form of fully qualified
+	 *            class and interface names as defined in The Java Virtual
+	 *            Machine Specification
+	 * @return {@code true} when the given class name identifies a system class,
+	 *         {@code false} otherwise
+	 */
 	public static boolean isSystemClass(String className) {
 		return className.startsWith("java/") || className.startsWith("javax/");
 	}

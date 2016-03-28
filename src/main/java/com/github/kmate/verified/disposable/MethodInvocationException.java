@@ -8,6 +8,9 @@ public class MethodInvocationException extends UsageException {
 		super(createMessage(methodName), target, methodName);
 	}
 
+	/**
+	 * Alias of {@link UsageException#getMemberName()}.
+	 */
 	public String getMethodName() {
 		return getMemberName();
 	}

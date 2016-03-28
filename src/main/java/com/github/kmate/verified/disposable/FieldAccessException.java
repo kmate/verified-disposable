@@ -11,10 +11,17 @@ public class FieldAccessException extends UsageException {
 		this.isWrite = isWrite;
 	}
 
+	/**
+	 * Alias of {@link UsageException#getMemberName()}.
+	 */
 	public String getFieldName() {
 		return getMemberName();
 	}
 
+	/**
+	 * @return {@code true} when the failed access was a field write, and
+	 *         {@code false} in case of a read
+	 */
 	public boolean isWrite() {
 		return isWrite;
 	}

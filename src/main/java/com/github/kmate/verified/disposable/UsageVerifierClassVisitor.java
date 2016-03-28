@@ -6,6 +6,10 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.LocalVariablesSorter;
 
+/**
+ * Applies {@link UsageVerifierInstructionAdapter} on all methods of a single
+ * class.
+ */
 class UsageVerifierClassVisitor extends ClassVisitor {
 
 	private final ClassReader reader;

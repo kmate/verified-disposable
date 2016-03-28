@@ -13,10 +13,16 @@ public class UsageException extends RuntimeException {
 		this.memberName = memberName;
 	}
 
+	/**
+	 * @return reference to the disposed target of the failing access
+	 */
 	public Disposable getTargetObject() {
 		return target;
 	}
 
+	/**
+	 * @return local name of the method or field being accessed
+	 */
 	public String getMemberName() {
 		return memberName;
 	}
