@@ -17,5 +17,6 @@ public class DisposableTestObject implements Disposable, TestMethod {
 
 	@Override
 	public void testMethod(int testParam) {
+		// intentionally left blank
 	}
 }
