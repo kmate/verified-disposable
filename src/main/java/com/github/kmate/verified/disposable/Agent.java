@@ -10,9 +10,9 @@ import net.nicoulaj.instrument.AutoInstrumentation;
  * transformer}, which will examine all classes loaded thereafter. The
  * transformation inserts a static call to the appropriate method of class
  * {@link UsageVerifier} before each field access of {@link Disposable} objects,
- * except for those which are done in the same class. Each non-static and
- * non-private regular method of disposable objects will also be extended with a
- * similar check on its entry, except {@link Disposable#isDisposed()}.
+ * except for those which are done in the same class. Any call using
+ * <em>invokeinterface</em> or <em>invokevirtual</em> on {@link Disposable}
+ * objects will also be checked before execution at the call site.
  * <p>
  * It is important to initialize the agent before any client classes of
  * disposable classes are loaded. This could be done in the following two ways:

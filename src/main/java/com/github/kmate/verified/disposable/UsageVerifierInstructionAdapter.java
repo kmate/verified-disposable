@@ -1,10 +1,5 @@
 package com.github.kmate.verified.disposable;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -16,9 +11,7 @@ import org.objectweb.asm.commons.LocalVariablesSorter;
  * {@link UsageVerifier} before each field access of {@link Disposable} objects,
  * except for those which are done in the same disposable class. Any call using
  * <em>invokeinterface</em> or <em>invokevirtual</em> on {@link Disposable}
- * objects will also be checked before execution at the call site. The only
- * exceptions are class and instance initializers, {@code getClass} and
- * {@code isDisposed} methods.
+ * objects will also be checked before execution at the call site.
  * 
  * @see UsageVerifierTransformer
  */
@@ -27,9 +20,6 @@ class UsageVerifierInstructionAdapter extends InstructionAdapter {
 	private static final String USAGE_VERIFIER_CLASS_NAME = UsageVerifier.class.getName().replace('.', '/');
 	private static final String FIELD_VERIFIER_TYPE = "(L" + ClassUtils.DISPOSABLE_CLASS_NAME + ";Ljava/lang/String;)V";
 	private static final String METHOD_VERIFIER_TYPE = "(Ljava/lang/Object;Ljava/lang/String;)V";
-
-	private static final Set<String> UNCHECKED_METHODS = Collections
-			.unmodifiableSet(new HashSet<String>(Arrays.asList("<init>", "<clinit>", "getClass", "isDisposed")));
 
 	private final ClassReader reader;
 	private final ClassLoader loader;
@@ -89,14 +79,10 @@ class UsageVerifierInstructionAdapter extends InstructionAdapter {
 
 	@Override
 	public void invokevirtual(String owner, String name, String desc, boolean itf) {
-		if (shouldInstrumentVirtualMethod(owner, name)) {
+		if (isDisposableExternalClass(owner)) {
 			addMethodVerifierInvocation(owner, name, desc);
 		}
 		super.invokevirtual(owner, name, desc, itf);
-	}
-
-	private boolean shouldInstrumentVirtualMethod(String owner, String methodName) {
-		return isDisposableExternalClass(owner) && !UNCHECKED_METHODS.contains(methodName);
 	}
 
 	@Override
