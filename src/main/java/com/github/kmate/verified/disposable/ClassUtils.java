@@ -26,7 +26,7 @@ abstract class ClassUtils {
 	 *         {@code false} otherwise
 	 */
 	public static boolean isSystemClass(String className) {
-		return className.startsWith("java/") || className.startsWith("javax/");
+		return className.startsWith("java/") || className.startsWith("javax/") || className.startsWith("sun/");
 	}
 
 	public static boolean isDisposableClass(String className, ClassLoader loader) {

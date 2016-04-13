@@ -26,6 +26,11 @@ public class ClassUtilsTest extends ClassUtils {
 	}
 
 	@Test
+	public void testPostVMInitHookIsSystemClass() {
+		assertTrue(isSystemClass("sun/misc/PostVMInitHook"));
+	}
+
+	@Test
 	public void testDisposableCheckOnMissingClass() {
 		final String invalidClassName = "an invalid class name";
 		thrown.expect(IllegalArgumentException.class);
