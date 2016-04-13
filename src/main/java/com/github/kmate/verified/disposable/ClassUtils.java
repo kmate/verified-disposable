@@ -14,8 +14,8 @@ abstract class ClassUtils {
 
 	/**
 	 * Determines whether a class is a system class. All classes in the
-	 * {@code java.*} and {@code javax.*} packages are treated as system
-	 * classes. These classes will never be transformed by
+	 * {@code java.*}, {@code javax.*} and {@code sun.*} packages are treated as
+	 * system classes. These classes will never be transformed by
 	 * {@link UsageVerifierTransformer}.
 	 * 
 	 * @param className
