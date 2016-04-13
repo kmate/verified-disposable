@@ -16,6 +16,6 @@ public class MethodInvocationException extends UsageException {
 	}
 
 	private static String createMessage(String methodName) {
-		return "Invoking method of a disposed object:" + methodName;
+		return "Invoking method of a disposed object: " + methodName;
 	}
 }
