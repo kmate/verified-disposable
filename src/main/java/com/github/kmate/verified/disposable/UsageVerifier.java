@@ -21,9 +21,25 @@ public abstract class UsageVerifier {
 		}
 	}
 
-	public static void verifyMethodInvocation(Disposable target, String methodName) {
-		if (target.isDisposed()) {
-			throw new MethodInvocationException(target, methodName);
+	/**
+	 * This method is also used to verify invocations with
+	 * <em>invokeinterface</em>. In that case, it is unknown whether the current
+	 * target also implements {@link Disposable}. This is why <em>target</em> is
+	 * an arbitrary Object.
+	 * 
+	 * @param target
+	 *            target of the invocation, maybe a Disposable
+	 * @param methodName
+	 *            name of the method invoked
+	 */
+	public static void verifyMethodInvocation(Object target, String methodName) {
+		if (!(target instanceof Disposable)) {
+			return;
+		}
+
+		Disposable disposable = (Disposable) target;
+		if (target instanceof Disposable && disposable.isDisposed()) {
+			throw new MethodInvocationException(disposable, methodName);
 		}
 	}
 }

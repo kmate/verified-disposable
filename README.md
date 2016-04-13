@@ -9,7 +9,7 @@ This library provides run-time verification of instance field access and method 
 
 ## Implementation
 
-The implementation is based on [Java Instrumentation](https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html) and on the [ASM](http://asm.ow2.org/) bytecode manipulation framework. When the instrumentation agent implemented by the `Agent` class is active, it registers a class transformer, which will manipulate all classes loaded thereafter. The transformation inserts a static call to the appropriate method of class `UsageVerifier` before each field access of `Disposable` objects, except for those which are done in the same `Disposable` class. Every non-static and non-private regular method of `Disposable` objects will also be extended with a similar check on its entry.
+The implementation is based on [Java Instrumentation](https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html) and on the [ASM](http://asm.ow2.org/) bytecode manipulation framework. When the instrumentation agent implemented by the `Agent` class is active, it registers a class transformer, which will manipulate all classes loaded thereafter. The transformation inserts a static call to the appropriate method of class `UsageVerifier` before each field access of `Disposable` objects, except for those which are done in the same `Disposable` class. Any call using `invokeinterface` or `invokevirtual` on `Disposable` objects will also be checked before execution at the call site. The only exceptions are class and instance initializers, `getClass` and `isDisposed` methods.
 
 ## Usage
 

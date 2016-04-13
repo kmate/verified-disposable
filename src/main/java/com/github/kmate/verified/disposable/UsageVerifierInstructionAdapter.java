@@ -1,10 +1,5 @@
 package com.github.kmate.verified.disposable;
 
-import static org.objectweb.asm.Opcodes.ACC_BRIDGE;
-import static org.objectweb.asm.Opcodes.ACC_PRIVATE;
-import static org.objectweb.asm.Opcodes.ACC_STATIC;
-import static org.objectweb.asm.Opcodes.ACC_SYNTHETIC;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -19,73 +14,32 @@ import org.objectweb.asm.commons.LocalVariablesSorter;
 /**
  * Inserts a static call to the appropriate method of class
  * {@link UsageVerifier} before each field access of {@link Disposable} objects,
- * except for those which are done in the same disposable class. Every
- * non-static and non-private regular method of disposable objects will also be
- * extended with a similar check on its entry.
- * <p>
- * For the sake of clarity, the following methods will <b>not</b> be modified on
- * a disposable object:
- * <ul>
- * <li>constructors
- * <li>class initializer {@code <clinit>} and instance initializer {@code 
- * <init>}
- * <li>{@link #getClass()}
- * <li>{@link Disposable#isDisposed()}
- * <li>any static, private, synthetic and bridge methods
- * </ul>
+ * except for those which are done in the same disposable class. Any call using
+ * <em>invokeinterface</em> or <em>invokevirtual</em> on {@link Disposable}
+ * objects will also be checked before execution at the call site. The only
+ * exceptions are class and instance initializers, {@code getClass} and
+ * {@code isDisposed} methods.
  * 
  * @see UsageVerifierTransformer
  */
 class UsageVerifierInstructionAdapter extends InstructionAdapter {
 
 	private static final String USAGE_VERIFIER_CLASS_NAME = UsageVerifier.class.getName().replace('.', '/');
-	private static final String VERIFIER_SIGNATURE = "(L" + ClassUtils.DISPOSABLE_CLASS_NAME + ";Ljava/lang/String;)V";
+	private static final String FIELD_VERIFIER_TYPE = "(L" + ClassUtils.DISPOSABLE_CLASS_NAME + ";Ljava/lang/String;)V";
+	private static final String METHOD_VERIFIER_TYPE = "(Ljava/lang/Object;Ljava/lang/String;)V";
 
 	private static final Set<String> UNCHECKED_METHODS = Collections
 			.unmodifiableSet(new HashSet<String>(Arrays.asList("<init>", "<clinit>", "getClass", "isDisposed")));
 
-	private static final int HAS_NO_ACCESS = ACC_STATIC + ACC_PRIVATE + ACC_SYNTHETIC + ACC_BRIDGE;
-
-	private final int access;
-	private final String methodName;
 	private final ClassReader reader;
 	private final ClassLoader loader;
 	private final LocalVariablesSorter variables;
 
-	UsageVerifierInstructionAdapter(int access, String methodName, ClassReader reader, ClassLoader loader,
-			LocalVariablesSorter variables) {
+	UsageVerifierInstructionAdapter(ClassReader reader, ClassLoader loader, LocalVariablesSorter variables) {
 		super(Opcodes.ASM5, variables);
-		this.access = access;
-		this.methodName = methodName;
 		this.reader = reader;
 		this.loader = loader;
 		this.variables = variables;
-	}
-
-	@Override
-	public void visitCode() {
-		if (shouldInstrumentMethod()) {
-			visitVarInsn(Opcodes.ALOAD, 0);
-			aconst(methodName);
-			invokestatic(USAGE_VERIFIER_CLASS_NAME, "verifyMethodInvocation", VERIFIER_SIGNATURE, false);
-		}
-		super.visitCode();
-	}
-
-	private boolean shouldInstrumentMethod() {
-		return hasPublicAccess() && !isUncheckedMethod() && ClassUtils.isDisposableClass(reader.getClassName(), loader);
-	}
-
-	private boolean hasPublicAccess() {
-		return 0 == (access & HAS_NO_ACCESS);
-	}
-
-	private boolean isUncheckedMethod() {
-		return isConstructor() || UNCHECKED_METHODS.contains(methodName);
-	}
-
-	private boolean isConstructor() {
-		return reader.getClassName().equals(methodName);
 	}
 
 	@Override
@@ -93,7 +47,7 @@ class UsageVerifierInstructionAdapter extends InstructionAdapter {
 		if (isDisposableExternalClass(owner)) {
 			dup();
 			aconst(name);
-			invokestatic(USAGE_VERIFIER_CLASS_NAME, "verifyFieldRead", VERIFIER_SIGNATURE, false);
+			invokestatic(USAGE_VERIFIER_CLASS_NAME, "verifyFieldRead", FIELD_VERIFIER_TYPE, false);
 		}
 		super.getfield(owner, name, desc);
 	}
@@ -101,17 +55,25 @@ class UsageVerifierInstructionAdapter extends InstructionAdapter {
 	@Override
 	public void putfield(String owner, String name, String desc) {
 		if (isDisposableExternalClass(owner)) {
+			// Original stack: owner,newValue
+			// Modified stack: owner,newValue,owner,name
 			Type fieldType = Type.getType(desc);
 			Type ownerType = Type.getType("L" + owner + ";");
 			int newValueLocal = variables.newLocal(fieldType);
 			int ownerLocal = variables.newLocal(ownerType);
+			// saving new value from stack top
 			store(newValueLocal, fieldType);
+			// duplicating owner
 			dup();
+			// saving one of the owners
 			store(ownerLocal, ownerType);
+			// restoring new value
 			load(newValueLocal, fieldType);
+			// restoring owner
 			load(ownerLocal, ownerType);
+			// add field name to stack top
 			aconst(name);
-			invokestatic(USAGE_VERIFIER_CLASS_NAME, "verifyFieldWrite", VERIFIER_SIGNATURE, false);
+			invokestatic(USAGE_VERIFIER_CLASS_NAME, "verifyFieldWrite", FIELD_VERIFIER_TYPE, false);
 		}
 		super.putfield(owner, name, desc);
 	}
@@ -123,5 +85,52 @@ class UsageVerifierInstructionAdapter extends InstructionAdapter {
 			return false;
 		}
 		return ClassUtils.isDisposableClass(candidate, loader);
+	}
+
+	@Override
+	public void invokevirtual(String owner, String name, String desc, boolean itf) {
+		if (shouldInstrumentVirtualMethod(owner, name)) {
+			addMethodVerifierInvocation(owner, name, desc);
+		}
+		super.invokevirtual(owner, name, desc, itf);
+	}
+
+	private boolean shouldInstrumentVirtualMethod(String owner, String methodName) {
+		return isDisposableExternalClass(owner) && !UNCHECKED_METHODS.contains(methodName);
+	}
+
+	@Override
+	public void invokeinterface(String owner, String name, String desc) {
+		addMethodVerifierInvocation(owner, name, desc);
+		super.invokeinterface(owner, name, desc);
+	}
+
+	private void addMethodVerifierInvocation(String owner, String name, String desc) {
+		// Original stack: owner,arg0,..,argN
+		// Modified stack: owner,arg0,..,argN,owner,name
+		Type methodType = Type.getType(desc);
+		Type[] argTypes = methodType.getArgumentTypes();
+		int[] argLocals = new int[argTypes.length];
+		int argN = 0;
+		// save all arguments from stack top
+		for (Type argType : argTypes) {
+			argLocals[argN] = variables.newLocal(argType);
+			store(argLocals[argN++], argType);
+		}
+		Type ownerType = Type.getType("L" + owner + ";");
+		int ownerLocal = variables.newLocal(ownerType);
+		// duplicate owner on stack top
+		dup();
+		// save one of the owners
+		store(ownerLocal, ownerType);
+		argN = 0;
+		// restore all arguments
+		for (int argLocal : argLocals) {
+			load(argLocal, argTypes[argN]);
+		}
+		// push owner and method name on stack
+		load(ownerLocal, ownerType);
+		aconst(name);
+		invokestatic(USAGE_VERIFIER_CLASS_NAME, "verifyMethodInvocation", METHOD_VERIFIER_TYPE, false);
 	}
 }

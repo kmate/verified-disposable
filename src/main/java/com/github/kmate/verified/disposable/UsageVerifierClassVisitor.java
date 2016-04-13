@@ -25,6 +25,6 @@ class UsageVerifierClassVisitor extends ClassVisitor {
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 		MethodVisitor writer = super.visitMethod(access, name, desc, signature, exceptions);
 		LocalVariablesSorter variables = new LocalVariablesSorter(access, desc, writer);
-		return new UsageVerifierInstructionAdapter(access, name, reader, loader, variables);
+		return new UsageVerifierInstructionAdapter(reader, loader, variables);
 	}
 }
