@@ -43,7 +43,7 @@ public class TestSubject implements Disposable {
 
 ### Registration of the verifier agent
 
-One could either use the `-javaagent` switch for the JVM, or call `Agent.initialize()`. The second aproach will work as expected only when it is called before any of the `Disposable` classes or their users are loaded. It may also require the `-XX:+StartAttachListener` command line option to be passed for the JVM.
+One could either use the `-javaagent:verified-disposable-${version}-agent.jar` switch for the JVM, or call `Agent.initialize()`. The second aproach will work as expected only when it is called before any of the `Disposable` classes or their users are loaded. It may also require the `-XX:+StartAttachListener` command line option to be passed for the JVM.
 
 ### Using the disposable instances
 
