@@ -38,7 +38,7 @@ public abstract class UsageVerifier {
 		}
 
 		Disposable disposable = (Disposable) target;
-		if (target instanceof Disposable && disposable.isDisposed()) {
+		if (disposable.isDisposed()) {
 			throw new MethodInvocationException(disposable, methodName);
 		}
 	}
